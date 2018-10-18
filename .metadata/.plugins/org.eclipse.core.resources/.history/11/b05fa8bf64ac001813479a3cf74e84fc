@@ -1,0 +1,130 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class PrefSum {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	static class Foo{
+		int[] arr;
+		int[] pS;
+		int[][] m;
+		public Foo(int[] arr) {
+			this.arr = arr;
+			pS = new int[arr.length+1];
+			pS[0] = 0;
+			for(int i=1; i<pS.length; i++) {
+				pS[i] = pS[i-1] + arr[i-1];
+			}
+			
+			int d = (int)Math.ceil(Math.log(arr.length)/Math.log(2));
+			int a = 1 << d;
+			m = new int[d+1][a];
+			for(int i=0; i<a; i++) {
+				if(i < arr.length) m[0][i] = arr[i];
+				else m[0][i] = arr[arr.length-1];
+			}
+			for(int i = 1; i<m.length; i++) {
+				for(int j=0; j < m[i].length; j+=(1<<i)) {
+					m[i][j] = Math.max(m[i-1][j], m[i-1][j+(1<<(i-1))]);
+				}
+			}
+			
+			for(int[] x : m) {
+				System.out.println(Arrays.toString(x));
+			}
+		}
+		
+		private int rightChildIndex(int v, int h) {
+			return v + (1<<(h-1));
+		}
+		
+		private int leftChildIndex(int v, int h) {
+			return v;
+		}
+		
+		private int rangeMax(int v, int h, int i, int j, int s, int e) {
+			System.out.println("s=" + s + " e=" + e);
+			System.out.println("i=" + i + " j=" + j);
+			System.out.println("v=" + v);
+			if(i == s && j == e) {
+				System.out.println("hi" + m[h][v] + " " + v);
+				return m[h][v];
+			}
+			else {
+				int mi = s + ((e-s)/2);
+				int l = (i <= mi)?rangeMax(leftChildIndex(v, h), h-1, i, Math.min(j, mi), s, mi):Integer.MIN_VALUE;
+				int r = (j > mi)?rangeMax(rightChildIndex(v, h), h-1, Math.max(i, mi+1), j, (mi+1), e):Integer.MIN_VALUE;
+				return Math.max(l, r);
+			}
+		}
+		
+		public int rangeMax(int i, int j) {
+			return rangeMax(0, m.length-1, i, j-1, 0, m[0].length-1);
+		}
+		
+		public int rangeSum(int i, int j) {
+			return pS[j] - pS[i];
+		}
+	}
+	
+	public static void main (String[] args) {
+		Foo foo = new Foo(new int[] {3, 1, 5, 4, 2, 7, 9, 11});
+		System.out.println(foo.rangeMax(0, 6));
+	}
+}

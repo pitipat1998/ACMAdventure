@@ -1,0 +1,114 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class Ananagram {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	static String[] words = new String[1001];
+	static TreeSet<String> ananas = new TreeSet<>();
+//	HashMap<String, Set<String>> same = new HashMap<>();
+	static int wi = 0, ai = 0;
+	static boolean ana;
+	
+	public static boolean isAna(String x, String y) {
+		int[] xc = new int['z'+1];
+		int[] yc = new int['z'+1];
+		for(int i=0; i<x.length(); i++) {
+			xc[x.charAt(i)]++;
+		}
+		for(int i=0; i<y.length(); i++) {
+			yc[y.charAt(i)]++;
+		}
+		for(int i='A'; i<='Z'; i++) {
+			if(xc[i]+xc[i+32] != yc[i]+yc[i+32]) return false;
+		}
+		return true;
+	}
+	
+	public static void main(String[] args) {
+		FastReader f = new FastReader();
+		String s;
+		
+		while(!(s = f.nextLine()).equals("#")) {
+			//System.out.println(s);
+			 String[] line = s.trim().split(" +");
+			 for(int i=0; i<line.length; i++) {
+				 words[wi++] = line[i];
+			 }
+		}
+		
+		for(int i=0; i<wi; i++) {
+			ana = false;
+			for(int j=0; j<wi; j++) {
+				if(i != j) {
+					if(!isAna(words[i], words[j])) {
+						ana = true;
+					}
+				}
+			}
+			if(!ana) ananas.add(words[i]);
+		}
+		
+		for(String x : ananas) {
+			System.out.println(x);
+		}
+		
+		
+	}
+	
+}

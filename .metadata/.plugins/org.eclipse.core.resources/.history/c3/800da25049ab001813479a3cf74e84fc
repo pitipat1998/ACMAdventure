@@ -1,0 +1,95 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class TriTiling {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	public static int fill(int top, int mid, int bot, int N) {
+		if(top > N || mid > N || bot > N) return 0;
+		if(top == N && mid == N && bot == N) return 1;
+		int count = 0;
+		if(top == mid && mid == bot) {
+			count += fill(top+1, mid+1, bot, N) + fill(top, mid+1, bot+1, N) + fill(top+2, mid, bot, N) +
+					fill(top+2, mid+2, bot+2, N) + fill(top, mid, bot+2, N);
+		}
+		else if(top > mid && top > bot) {
+			count += fill(top, mid+1, bot+1, N) + fill(top, mid+2, bot+2, N);
+		}
+		else if(bot > mid && bot > top) {
+			count += fill(top+1, mid+1, bot, N) + fill(top+2, mid+2, bot, N);
+		}
+		else if(top == mid && mid > bot) {
+			count += fill(top, mid, bot+2,N);
+		}
+		else if(bot == mid && mid > top) {
+			count += fill(top+2, mid, bot, N);
+		}
+		return count;
+	}
+	
+	public static void main(String[] args) {
+		FastReader f = new FastReader();
+		int N;
+		while((N = f.nextInt()) != -1) {
+			System.out.println(fill(0, 0, 0, N));
+		}
+	}
+}

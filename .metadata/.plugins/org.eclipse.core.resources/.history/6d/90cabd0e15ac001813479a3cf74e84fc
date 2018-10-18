@@ -1,0 +1,109 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class PrefSum {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	static class Foo{
+		int[] arr;
+		int[] pS;
+		int[][] m;
+		public Foo(int[] arr) {
+			this.arr = arr;
+			pS = new int[arr.length+1];
+			pS[0] = 0;
+			for(int i=1; i<pS.length; i++) {
+				pS[i] = pS[i-1] + arr[i-1];
+			}
+			
+			int d = (int)Math.ceil(Math.log(arr.length)/Math.log(2));
+			int a = 1 << d;
+			m = new int[d+1][a];
+			for(int i=0; i<a; i++) {
+				if(i < arr.length) m[0][i] = arr[i];
+				else m[0][i] = arr[arr.length-1];
+			}
+			for(int i = 1; i<m.length; i++) {
+				for(int j=0; j < m[i].length; j+=(1<<i)) {
+					System.out.println(j);
+					m[i][j] = Math.max(m[i-1][j], m[i-1][j+(1<<(i-1))]);
+				}
+			}
+			
+			for(int[] x : m) {
+				System.out.println(Arrays.toString(x));
+			}
+		}
+		
+		//private int rangeMax(int i, int j, int s, int e)
+		
+		public int rangeMax(int i, int j) {
+			return 0;
+		}
+		
+		public int rangeSum(int i, int j) {
+			return pS[j] - pS[i];
+		}
+	}
+	
+	public static void main (String[] args) {
+		Foo foo = new Foo(new int[] {3, 1, 5, 4, 2, 7});
+		//System.out.println(foo.rangeSum(1, 7));
+	}
+}

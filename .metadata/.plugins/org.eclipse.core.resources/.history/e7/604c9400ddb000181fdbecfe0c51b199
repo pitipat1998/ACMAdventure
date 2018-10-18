@@ -1,0 +1,148 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+import java.util.StringTokenizer;
+public class MST {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	static class WEdge implements Comparable<WEdge>{
+		int u, v, w;
+		WEdge(int u, int v, int w){
+			this.u = u;
+			this.v = v;
+			this.w = w;
+		}
+		
+		@Override
+		public int compareTo(WEdge o) {
+			// TODO Auto-generated method stub
+			return w-o.w;
+		}
+		
+		
+	}
+	
+	static int N, M;
+	static WEdge[] edges;
+	static int[] nodes = new int[(int)(2e5)];
+	static int[] sizes = new int[(int)(2e5)];
+	static long sum = 0;
+	
+	
+	private static int root(int u) {
+		if(nodes[u] != u) nodes[u] = root(u);
+		return nodes[u];
+	}
+	
+	public static int find(int u) {
+		return root(u);
+	}
+	
+	public static void union(WEdge e) {
+		int u = e.u, v = e.v, w = e.w;
+		int ru = root(u), rv = root(v);
+		if(sizes[ru] > sizes[rv]) {
+			nodes[rv] = ru;
+			sizes[ru] += sizes[rv];
+		}
+		else {
+			nodes[ru] = rv;
+			sizes[rv] += sizes[ru];
+		}
+		sum += w;
+	}
+	
+	public static void createMST() {
+		for(int i=0; i<M; i++) {
+			WEdge e = edges[i];
+			if(find(e.u)!= find(e.v)) union(e);
+		}
+	}
+	
+	public static void initialize() {
+		sum = 0;
+		for(int n=0; n<N; n++) {
+			nodes[n] = n;
+			sizes[n] = 1;
+		}
+	}
+	
+	public static void main(String[] args) {
+		FastReader f = new FastReader();
+		N = f.nextInt();
+		M = f.nextInt();
+		WEdge[] es = new WEdge[M];
+		for(int m=0; m<M; m++) {
+			int u = f.nextInt()-1, v = f.nextInt()-1, w = f.nextInt();
+			WEdge e = new WEdge(u, v, w);
+			es[m] = e;
+		}
+		
+		edges = es.clone();
+		Arrays.sort(edges);
+		
+		for(int m=0; m<M; m++) {
+			initialize();
+			union(es[m]);
+			createMST();
+			System.out.println(sum);
+		}
+		
+	}
+}

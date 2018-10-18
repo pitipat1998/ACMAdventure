@@ -1,0 +1,91 @@
+import java.util.*;
+import java.io.*;
+import java.lang.*;
+
+public class HerdSums {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	public static void main(String[] args) {
+		FastReader f = new FastReader();
+		int N = f.nextInt();
+		int l = 1;
+		int r = 1;
+		long sum = 0;
+		int count = 0;
+		while(l <= N && r <= N) {
+			System.out.println(sum);
+			if(sum < N) {
+				//System.out.println("hi");
+				sum += r;
+				r++;
+			}
+			else if(sum > N) {
+				sum -= l;
+				l++;
+			}
+			else {
+				//System.out.println("yo");
+				count++;
+				sum -= l;
+				l++;
+			}
+		}
+		System.out.println(count+1);
+	}
+	
+}

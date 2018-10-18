@@ -1,0 +1,47 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class BSearch1 {
+	
+	public static int bSearch(int[] arr, int x) {
+		int start = 0;
+		int end = arr.length;
+		int index = -1;
+		while(start <= end) {
+			//System.out.println("hi");
+			int p = (start+end)/2;
+			System.out.println(arr[p]);
+			if(arr[p] == x) {
+				index = p;
+				if(arr[p-1] != x) {
+					end = p-1;
+				}
+				else break;
+			}
+			else if(arr[p] < x) {
+				end = p;
+			}
+			else {
+				start = p+1;
+			}
+		}
+		return index;
+	}
+	
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+		int N = s.nextInt();
+		int Q = s.nextInt();
+		int[] arr = new int[N];
+		for(int i=0; i<N; i++) {
+			arr[i] = s.nextInt();
+		}
+		for(int i=0; i<Q; i++) {
+			int x = s.nextInt();
+			bSearch(arr,x);
+			//System.out.println(bSearch(arr,x));
+		}
+		
+	}
+}

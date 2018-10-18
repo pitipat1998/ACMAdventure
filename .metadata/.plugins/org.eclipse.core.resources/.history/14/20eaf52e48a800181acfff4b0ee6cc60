@@ -1,0 +1,99 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class RoadtoSchool {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	static int findMin(double[] P) {
+		int min = Integer.MAX_VALUE;
+		for(int i=0; i<P.length; i++) {
+			if(P[i] < min) min = i;
+		}
+		return min;
+	}
+	
+	public static void main(String[] args) {
+		FastReader f = new FastReader();
+		int N;
+		while((N = f.nextInt()) != 0) {
+			double[] D = new double[N];
+			double[] V = new double[N];
+			double pos = 0;
+			double v = 0;
+			int t = 0;
+			for(int i=0; i<N; i++) {
+				V[i] = ((double)f.nextInt()*1000.0)/3600.0;
+				int T =	f.nextInt();
+				D[i] = 	4500.0+(V[i]*T);
+			}
+			while(pos < 4500) {
+				t++;
+				double fastest = V[findMin(D)];
+				System.out.println(fastest);
+				pos += fastest;
+				for(int i=0; i<D.length; i++) {
+					D[i]-=V[i];
+				}
+			}
+			System.out.println(t);
+			
+		}
+	}
+}

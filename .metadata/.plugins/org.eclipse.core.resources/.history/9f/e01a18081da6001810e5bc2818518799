@@ -1,0 +1,133 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class CIADatacenter {
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	public static boolean check(int n, int d, int c, int e, int t) {
+		int sum = 0;
+		int count = 0;
+		for(int i=0; i<n; i++) {
+			count++;
+			if(count >= t) {
+				if(d*count >= c) sum += c;
+				else sum += d*count;
+			}
+		}
+		if(count == 1) sum += d;
+		System.out.println(sum);
+		return (sum >= e)?true:false;
+	}
+	
+	public static int bSearch(int x, int y, int lo, int hi) {
+		int res = lo;
+		while(hi > lo) {
+			int m = lo + ((hi-lo)/2);
+			if(x*m >= y) {
+				res = m;
+				hi = m;
+			}
+			else {
+				lo = m+1;
+			}
+		}
+		return res;
+	}
+	
+	public static int bSearch(int lo, int hi, int n, int d, int c, int e) {
+		int res = hi;
+		while(hi >= lo) {
+			int m = lo + ((hi-lo)/2);
+			System.out.println(m);
+			if(check(n, d, c, e, m)) {
+				res = n/m;
+				lo = m+1;
+			}
+			else {
+				hi = m;
+			}
+		}
+		return res;
+	}
+	
+	public static void main(String[] args) {
+		FastReader f = new FastReader();
+		int A = f.nextInt();
+		int B = f.nextInt();
+		int C = f.nextInt();
+		
+		if(A >= B) {
+			int low = C/B;
+			int up = low + B;
+			int res = bSearch(B, C, low, up);
+			System.out.println(res + " " + res);
+		}
+		else {
+			int low = C/A;
+			int up = low + A;
+			int resD = bSearch(A, C, low, up);
+			
+			low = C/B;
+			up = resD;
+			int resC = bSearch(B/A, B/A+1, resD, A, B, C);
+			System.out.println(resD + " " + resC);
+		}
+		
+	}
+}

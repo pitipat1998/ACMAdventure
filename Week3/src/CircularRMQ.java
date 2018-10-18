@@ -1,0 +1,163 @@
+import java.util.*;
+import java.io.*;
+import java.lang.*;
+
+public class CircularRMQ {
+	
+	static class FastReader
+    {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(new
+                     InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+	
+	static class SegTree{
+		long[] a;
+		long[] t;
+		int d;
+		int si;
+		int n;
+		SegTree(long[] a) {
+			this.a = a;
+			n = a.length;
+			d = (int)Math.ceil(Math.log(n)/Math.log(2));
+			si = 1 << d;
+			t = new long[2*si];
+			for(int i=0; i<si; i++) {
+				if(i < n) t[si+i] = a[i];
+				else t[si+i] = Long.MAX_VALUE;
+			}
+			for(int i=si-1; i>=1; i--) {
+				t[i] = Math.min(t[2*i],t[2*i+1]);
+			}
+			//System.out.println(Arrays.toString(t));
+			
+		}
+		
+		private int left(int i) { return 2*i; }
+		private int right(int i) { return 2*i+1; }
+		private int parent(int i) { return i/2; }
+		private int mid(int i, int j) { return i+(j-i)/2; }
+		
+		void update(int i, int v) {
+			i += si;
+			t[i] += v;
+			while(i > 1) {
+				i = parent(i);
+				t[i] = Math.min(t[left(i)], t[right(i)]);
+			}
+		}
+		
+		void updateInRange(int l, int r, int v) {
+			if(l > r) {
+				for(int i=l; i<n; i++) {
+					update(i, v);
+				}
+				for(int i=0; i<=r; i++) {
+					update(i, v);
+				}
+			}
+			else {
+				for(int i=l; i<=r; i++) {
+					update(i, v);
+				}
+			}
+		}
+		
+		long query(int v, int l, int r, int L, int R) {
+			if(L > r || R < l) return Integer.MAX_VALUE;
+			if(l <= L & R <= r) {
+				return t[v];
+			}
+			int m = mid(L, R);
+			return Math.min(query(left(v), l, r, L, m), query(right(v), l, r, m+1, R));
+		}
+		
+		long minInRange(int l, int r) {
+			if(l>r) {
+				return Math.min(query(1, l, n-1, 0, n-1), query(1, 0, r, 0, n-1));
+			}
+			else {
+				return query(1, l, r, 0, n-1);
+			}
+		}
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		FastReader f = new FastReader();
+		int N = f.nextInt();
+		long[] arr = new long[N];
+		for(int i=0; i<N; i++) {
+			arr[i] = f.nextInt();
+		}
+		SegTree st = new SegTree(arr);
+		for(int m=f.nextInt(); m>0; m--) {
+			String[] q = f.nextLine().split(" ");
+			int l,r,v;
+			if(q.length == 2) {
+				l = Integer.parseInt(q[0]);
+				r = Integer.parseInt(q[1]);
+				System.out.println(st.minInRange(l, r));
+			}
+			else {
+				l = Integer.parseInt(q[0]);
+				r = Integer.parseInt(q[1]);
+				v = Integer.parseInt(q[2]);
+				st.updateInRange(l, r, v);
+				//System.out.println(Arrays.toString(st.t));
+			}
+		}
+	}
+}

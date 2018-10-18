@@ -1,0 +1,59 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class RootedTree {
+	
+	static class DirectedGraph{
+		Set<Integer>[] adjT;
+		int N;
+		
+		DirectedGraph(int N){
+			adjT = (Set<Integer>[]) new Set[N];
+			this.N = N;
+		}
+		
+		void addEdge(int u, int v) {
+			if(adjT[u] != null) adjT[u] = new HashSet<>();
+			if(adjT[v] != null) adjT[v] = new HashSet<>();
+			adjT[u].add(v);
+			adjT[v].add(u);
+		}
+		
+		DAG createDAG(int s) {
+			Stack<Integer> frontier = new Stack<>();
+			boolean[] vtxs = new boolean[N];
+			DAG dag = new DAG();
+			frontier.push(s);
+			int prev = s;
+			while(!frontier.isEmpty()) {
+				int v = frontier.pop();
+				if(s != v) dag.addEdge(prev, v);
+				vtxs[v] = true;
+				for(int w : adjT[v]) {
+					frontier.push(w);
+				}
+			}
+			return dag;
+		}
+		
+	}
+	
+	static class DAG{
+		Set<Integer>[] adjT;
+		
+		DAG(){
+			adjT = (Set<Integer>[]) new Set[N];
+		}
+		
+		void addEdge(int u, int v) {
+			if(adjT[v] != null) adjT[v] = new HashSet<>();
+			adjT[v].add(u);
+		}
+		
+	}
+	
+	public static void main(String[] args) {
+		
+	}
+}
